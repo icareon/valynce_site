@@ -272,7 +272,7 @@
     gl.compileShader(shader);
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       const log = gl.getShaderInfoLog(shader) || '(no shader log)';
-      console.error('Meridian wave ' + label + ' shader compile failed:\n' + log + '\n\n' + source);
+      console.error('Valynce wave ' + label + ' shader compile failed:\n' + log + '\n\n' + source);
       gl.deleteShader(shader);
       throw new Error(label + ' shader compile failed: ' + log);
     }
@@ -288,7 +288,7 @@
     gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
       const log = gl.getProgramInfoLog(program) || '(no program log)';
-      console.error('Meridian wave program link failed:\n' + log);
+      console.error('Valynce wave program link failed:\n' + log);
       gl.deleteProgram(program);
       gl.deleteShader(vertexShader);
       gl.deleteShader(fragmentShader);
@@ -693,19 +693,19 @@ void main() {
   try {
     renderer = createWebGLRenderer(true);
   } catch (webgl2Error) {
-    console.error('Meridian wave WebGL2 setup failed.', webgl2Error);
+    console.error('Valynce wave WebGL2 setup failed.', webgl2Error);
     replaceCanvasSurface();
     updateCanvasSize();
     try {
       renderer = createWebGLRenderer(false);
     } catch (webgl1Error) {
-      console.error('Meridian wave WebGL1 setup failed.', webgl1Error);
+      console.error('Valynce wave WebGL1 setup failed.', webgl1Error);
       replaceCanvasSurface();
       updateCanvasSize();
       try {
         renderer = createCanvas2DRenderer();
       } catch (fallbackError) {
-        console.error('Meridian wave Canvas 2D fallback failed.', fallbackError);
+        console.error('Valynce wave Canvas 2D fallback failed.', fallbackError);
         return;
       }
     }
@@ -714,7 +714,7 @@ void main() {
   rendererType = renderer.type;
   resizeRenderer = renderer.resize;
   updateCanvasSize();
-  console.log('Meridian wave: ' + rendererType + ' | dots: ' + dotCount);
+  console.log('Valynce wave: ' + rendererType + ' | dots: ' + dotCount);
 
   const startTime = performance.now();
   let previousTime = startTime;
@@ -763,7 +763,7 @@ void main() {
         debugRing.style.display = hoverStrength > 0.001 ? 'block' : 'none';
       }
     } catch (error) {
-      console.error('Meridian wave frame error:', error);
+      console.error('Valynce wave frame error:', error);
     } finally {
       requestAnimationFrame(frame);
     }
