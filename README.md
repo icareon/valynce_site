@@ -11,4 +11,4 @@ Pages:
 Everything required for the visual site is included locally in `assets/`.
 No web fonts, frameworks, CDNs, or external image dependencies are required.
 
-The contact buttons use `mailto:hello@valynce.ai`.
+The contact buttons use `mailto:hello@valynceai.com`.
