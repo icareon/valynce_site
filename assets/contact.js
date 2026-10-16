@@ -18,10 +18,24 @@
     const controller = new AbortController();
     const timeout = setTimeout(function () { controller.abort(); }, 30000);
     try {
+      const fields = Object.fromEntries(new FormData(form));
+      const fullName = [fields['First name'], fields['Last name']].filter(Boolean).join(' ').trim();
+      const company = (fields.Company || '').trim();
+      const subjectDetail = [fullName, company].filter(Boolean).join(' · ').replace(/[\r\n]+/g, ' ').slice(0, 180);
+      const inquiry = {
+        'Contact name': fullName,
+        'Company': company || 'Not provided',
+        'Email': fields.email,
+        'Phone': (fields.Phone || '').trim() || 'Not provided',
+        'Message': fields.Message,
+        '_replyto': fields.email,
+        '_subject': 'Valynce inquiry' + (subjectDetail ? ' — ' + subjectDetail : ''),
+        '_template': 'box'
+      };
       const response = await fetch('https://formsubmit.co/ajax/paul@valynceai.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        body: JSON.stringify(inquiry),
         signal: controller.signal
       });
       const result = await response.json();
