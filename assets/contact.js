@@ -32,9 +32,23 @@
         '_subject': 'Valynce inquiry' + (subjectDetail ? ' — ' + subjectDetail : ''),
         '_template': 'box'
       };
-      const response = await fetch('https://formsubmit.co/ajax/paul@valynceai.com', {
+      // Use Hostinger only after private SMTP configuration is installed.
+      // Failure after an SMTP attempt must never resend via a second provider.
+      let useHostinger = false;
+      try {
+        const setup = await fetch('api/contact.php', { signal: controller.signal, cache: 'no-store' });
+        if (setup.ok && (setup.headers.get('content-type') || '').includes('application/json')) {
+          useHostinger = (await setup.json()).configured === true;
+        }
+      } catch (setupError) {
+        if (controller.signal.aborted) throw setupError;
+      }
+      const endpoint = useHostinger ? 'api/contact.php' : 'https://formsubmit.co/ajax/paul@valynceai.com';
+      const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+      if (useHostinger) headers['X-Valynce-Form'] = '1';
+      const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        headers: headers,
         body: JSON.stringify(inquiry),
         signal: controller.signal
       });
