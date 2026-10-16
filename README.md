@@ -20,4 +20,4 @@ Inquiry emails use FormSubmit’s box template with readable labels, a combined 
 
 ## Hostinger branded email delivery
 
-The optional PHP/SMTP backend sends a fully branded Valynce HTML email with a plain-text alternative. Follow [HOSTINGER-EMAIL-SETUP.md](HOSTINGER-EMAIL-SETUP.md) to install the private mailbox configuration above public_html. FormSubmit remains the fallback until that configuration exists. Never commit the mailbox password.
+The optional PHP/SMTP backend sends a fully branded Valynce HTML email with a plain-text alternative. Follow [HOSTINGER-EMAIL-SETUP.md](HOSTINGER-EMAIL-SETUP.md) to install the private mailbox configuration above public_html. The live form uses FormSubmit explicitly; the SMTP integration is inactive. Installing configuration alone does not switch providers. Never commit the mailbox password.

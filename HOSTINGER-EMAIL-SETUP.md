@@ -1,3 +1,5 @@
+> Inactive reference implementation: the live form is explicitly set to FormSubmit at the owner’s request. Installing a config file alone will NOT activate SMTP. Switching requires a future frontend update and a live delivery test.
+
 # Activate branded Valynce inquiry emails
 
 This is prepared for Hostinger Custom PHP/HTML hosting with PHP 8.2+ and OpenSSL enabled. SMTP uses smtp.hostinger.com, implicit TLS, port 465. PHPMailer 7.1.1 source and license are included in api/lib/phpmailer; Composer is not required.
