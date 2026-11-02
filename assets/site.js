@@ -10,6 +10,7 @@
     dotEdgeAApx: 1.0,
     color: '#1A1A1A',
     waveAmplitude: 0.92,
+    rightCurvatureBoost: 0.35,
     waveLength: 1.0,
     idleCycleSeconds: 30,
     pitch: 1.22,
@@ -372,7 +373,10 @@ float terrain(vec2 p) {
   float w3 = sin(q.x * ${CONFIG.wave3X.toFixed(6)} + q.y * ${CONFIG.wave3Y.toFixed(6)} + ${CONFIG.wave3Phase.toFixed(6)} + uTimePhase * ${CONFIG.wave3Speed.toFixed(6)}) * ${CONFIG.wave3Amplitude.toFixed(6)};
   vec2 nq = q * ${CONFIG.noiseScale.toFixed(6)} + vec2(uTimePhase * ${CONFIG.noiseSpeedX.toFixed(6)}, uTimePhase * ${CONFIG.noiseSpeedY.toFixed(6)});
   float n = snoise(nq) * ${CONFIG.noiseAmplitude.toFixed(6)};
-  return (w1 + w2 + w3 + n) * ${CONFIG.waveAmplitude.toFixed(6)};
+  // Keep the text side calm and raise the visible right-hand crests by up to 35%.
+  float curvatureT = smoothstep(${(CONFIG.sheetCenterX - CONFIG.sheetWidth * 0.25).toFixed(6)}, ${(CONFIG.sheetCenterX + CONFIG.sheetWidth * 0.25).toFixed(6)}, p.x);
+  float curvatureScale = 1.0 + curvatureT * ${CONFIG.rightCurvatureBoost.toFixed(6)};
+  return (w1 + w2 + w3 + n) * ${CONFIG.waveAmplitude.toFixed(6)} * curvatureScale;
 }
 
 vec3 cameraPoint(vec3 p) {
@@ -611,7 +615,10 @@ void main() {
     const w1 = Math.sin(qx * CONFIG.wave1X + qy * CONFIG.wave1Y + CONFIG.wave1Phase + phase * CONFIG.wave1Speed) * CONFIG.wave1Amplitude;
     const w2 = Math.sin(qx * CONFIG.wave2X + qy * CONFIG.wave2Y + CONFIG.wave2Phase + phase * CONFIG.wave2Speed) * CONFIG.wave2Amplitude;
     const w3 = Math.sin(qx * CONFIG.wave3X + qy * CONFIG.wave3Y + CONFIG.wave3Phase + phase * CONFIG.wave3Speed) * CONFIG.wave3Amplitude;
-    return (w1 + w2 + w3) * CONFIG.waveAmplitude;
+    const curvatureX = Math.max(0, Math.min(1, (x - CONFIG.sheetCenterX + CONFIG.sheetWidth * 0.25) / (CONFIG.sheetWidth * 0.5)));
+    const curvatureT = curvatureX * curvatureX * (3 - 2 * curvatureX);
+    const curvatureScale = 1 + curvatureT * CONFIG.rightCurvatureBoost;
+    return (w1 + w2 + w3) * CONFIG.waveAmplitude * curvatureScale;
   }
 
   function cpuProject(x, y, z, tiltX, tiltY) {
